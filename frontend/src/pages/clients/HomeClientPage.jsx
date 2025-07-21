@@ -1,11 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { NavClient } from './composants/NavClient'
 import './HomeClientPage.css'
+import { apiURL } from '../../lib/apiURL';
+import { toast, Toaster } from 'sonner';
 
 export const HomeClientPage = () => {
   const { currentUser } = useSelector((state) => state.user)
+
+  const [bookings, setBookings] = React.useState([]);
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const response = await fetch(`${apiURL}/api/bookings/my-bookings`, {
+          credentials: "include",
+          method: "GET",
+        });
+        const data = await response.json();
+        setBookings(data.bookings);
+        console.log(data.bookings);
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+      }
+    };
+    fetchBookings();
+    
+  }, []);
 
   return (
     <div className="dashboard-container">
@@ -26,7 +48,7 @@ export const HomeClientPage = () => {
         </div>
         <div className="stat-card">
           <h3>Réservations</h3>
-          <p>0</p>
+          <p>{bookings.length}</p>
         </div>
         <div className="stat-card">
           <h3>Messages</h3>

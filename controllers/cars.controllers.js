@@ -93,14 +93,20 @@ export const updateCars = async (req, res) =>{
 // Fonction pour récupérer toutes les voitures
 export const getAllCars = async (req, res) =>{
   try {
-    const [cars] = await connectionDB.query("SELECT * FROM cars");
-
+    const [cars] = await connectionDB.query(`
+      SELECT c.*, u.username
+      FROM cars c
+      JOIN users u ON c.userId = u.id
+      WHERE c.available = 0
+    `);
     if (!cars) {
       return res.status(404).json({
         success: false,
         message: "Voitures non trouvées",
       });
     }
+
+    //console.log(cars);
     res.status(200).json({
       message: "Voitures récupérées avec succès !",
       success: true,

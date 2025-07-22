@@ -262,3 +262,140 @@ export const signout = async (req, res, next) => {
           })
     }
   }
+
+// 22 Fonction pour mettre à jour les informations d'un utilisateur
+export const updateUser = async (req, res) => {
+    const userId = req.params.id;
+    const { email, username, currentPassword, newPassword } = req.body;
+
+    try {
+        // Vérifier si l'utilisateur existe
+        const [users] = await connectionDB.query(
+            'SELECT * FROM users WHERE id = ?',
+            [userId]
+        );
+
+        if (users.length === 0) {
+            return res.status(404).json({
+                message: 'Utilisateur non trouvé',
+                error: 'USER_NOT_FOUND'
+            });
+        }
+
+        const user = users[0];
+        const updates = [];
+        const values = [];
+
+        // Vérification et mise à jour de l'email si fourni
+        if (email && email !== user.email) {
+            if (!isValidEmail(email)) {
+                return res.status(400).json({
+                    message: 'Format d\'email invalide',
+                    error: 'INVALID_EMAIL'
+                });
+            }
+
+            // Vérifier si le nouvel email est déjà utilisé
+            const [existingEmail] = await connectionDB.query(
+                'SELECT id FROM users WHERE email = ? AND id != ?',
+                [email, userId]
+            );
+
+            if (existingEmail.length > 0) {
+                return res.status(409).json({
+                    message: 'Cet email est déjà utilisé',
+                    error: 'EMAIL_EXISTS'
+                });
+            }
+
+            updates.push('email = ?');
+            values.push(email);
+        }
+
+        // Vérification et mise à jour du nom d'utilisateur si fourni
+        if (username && username !== user.username) {
+            if (username.length < 3) {
+                return res.status(400).json({
+                    message: 'Le nom d\'utilisateur doit contenir au moins 3 caractères',
+                    error: 'INVALID_USERNAME'
+                });
+            }
+
+            // Vérifier si le nouveau nom d'utilisateur est déjà utilisé
+            const [existingUsername] = await connectionDB.query(
+                'SELECT id FROM users WHERE username = ? AND id != ?',
+                [username, userId]
+            );
+
+            if (existingUsername.length > 0) {
+                return res.status(409).json({
+                    message: 'Ce nom d\'utilisateur est déjà utilisé',
+                    error: 'USERNAME_EXISTS'
+                });
+            }
+
+            updates.push('username = ?');
+            values.push(username);
+        }
+
+        // Vérification et mise à jour du mot de passe si fourni
+        if (currentPassword && newPassword) {
+            // Vérifier l'ancien mot de passe
+            const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+            
+            if (!isPasswordValid) {
+                return res.status(401).json({
+                    message: 'Mot de passe actuel incorrect',
+                    error: 'INVALID_PASSWORD'
+                });
+            }
+
+            // Valider le nouveau mot de passe
+            if (!isValidPassword(newPassword)) {
+                return res.status(400).json({
+                    message: 'Le nouveau mot de passe doit contenir au moins 4 caractères, une majuscule, une minuscule et un chiffre',
+                    error: 'INVALID_PASSWORD_FORMAT'
+                });
+            }
+
+            // Hacher le nouveau mot de passe
+            const saltRounds = 12;
+            const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+            updates.push('password = ?');
+            values.push(hashedPassword);
+        }
+
+        // Si aucune mise à jour n'est demandée
+        if (updates.length === 0) {
+            return res.status(200).json({
+                message: 'Aucune modification effectuée',
+                userId: userId
+            });
+        }
+
+        // Mise à jour des informations de l'utilisateur
+        const query = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
+        values.push(userId);
+
+        await connectionDB.query(query, values);
+
+        // Récupérer les informations mises à jour de l'utilisateur
+        const [updatedUser] = await connectionDB.query(
+            'SELECT id, username, email, role FROM users WHERE id = ?',
+            [userId]
+        );
+
+        res.status(200).json({
+            message: 'Informations mises à jour avec succès',
+            user: updatedUser[0]
+        });
+
+    } catch (error) {
+        console.error('Erreur lors de la mise à jour de l\'utilisateur:', error);
+        res.status(500).json({
+            message: 'Erreur lors de la mise à jour de l\'utilisateur',
+            error: error.message
+        });
+    }
+};
+

@@ -14,7 +14,7 @@ export const HomeClientPage = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await fetch(`${apiURL}/api/bookings/my-bookings`, {
+        const response = await fetch(`${apiURL}/api/bookings/my-bookings/client`, {
           credentials: "include",
           method: "GET",
         });
@@ -82,7 +82,7 @@ export const HomeClientPage = () => {
           <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
             <h2 className="section-title">Vos informations</h2>
             <div className="flex gap-3">
-              <button 
+              <Link to="/my-profil/update"
                 onClick={handleEditProfile} 
                 className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm
                           bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100 hover:border-blue-300
@@ -93,7 +93,7 @@ export const HomeClientPage = () => {
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
                 Modifier
-              </button>
+              </Link>
               <button 
                 onClick={handleDeleteProfile} 
                 className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm

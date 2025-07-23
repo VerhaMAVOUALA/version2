@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { FleetSection } from '../components/FleetSection';
 
 // Images pour la flotte (liens externes - à remplacer par vos propres images)
 const BerlineImage = "https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80";
@@ -289,136 +290,6 @@ const ServicesSection = () => {
   );
 };
 
-// Composant Flotte amélioré
-const FleetSection = () => {
-  const vehicles = [
-    {
-      name: "Berline Executive",
-      image: BerlineImage,
-      capacity: "1-3 passagers",
-      features: ["Climatisation", "Wi-Fi", "Eau gratuite", "Sièges massants"],
-      price: "À partir de 45€/h",
-      specs: [
-        { label: "Marque", value: "Mercedes" },
-        { label: "Modèle", value: "Classe S" },
-        { label: "Année", value: "2024" }
-      ]
-    },
-    {
-      name: "SUV Premium",
-      image: SuvImage,
-      capacity: "1-6 passagers",
-      features: ["Espace bagages", "Sièges cuir", "Système audio", "Toit panoramique"],
-      price: "À partir de 65€/h",
-      specs: [
-        { label: "Marque", value: "Range Rover" },
-        { label: "Modèle", value: "Autobiography" },
-        { label: "Année", value: "2023" }
-      ]
-    },
-    {
-      name: "Van Luxe",
-      image: VanImage,
-      capacity: "1-8 passagers",
-      features: ["Espace groupe", "Confort max", "Éclairage LED", "Mini-bar"],
-      price: "À partir de 85€/h",
-      specs: [
-        { label: "Marque", value: "Mercedes" },
-        { label: "Modèle", value: "V-Class" },
-        { label: "Année", value: "2024" }
-      ]
-    }
-  ];
-
-  return (
-    <section id="flotte" className="py-20 bg-white">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="text-4xl font-bold text-gray-800 mb-4"
-          >
-            Notre Flotte Exclusive
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="text-xl text-gray-600 max-w-2xl mx-auto"
-          >
-            Des véhicules haut de gamme entretenus avec soin pour votre confort et sécurité
-          </motion.p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {vehicles.map((vehicle, index) => (
-            <motion.div 
-              key={index}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -10 }}
-              className="bg-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300"
-            >
-              <div className="h-64 overflow-hidden">
-                <img 
-                  src={vehicle.image} 
-                  alt={vehicle.name} 
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                />
-              </div>
-              <div className="p-8">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-2xl font-bold text-gray-800">{vehicle.name}</h3>
-                  <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
-                    {vehicle.price}
-                  </span>
-                </div>
-                
-                <div className="mb-6">
-                  <h4 className="font-semibold text-gray-700 mb-2">Caractéristiques techniques :</h4>
-                  <div className="grid grid-cols-2 gap-2 mb-4">
-                    {vehicle.specs.map((spec, i) => (
-                      <div key={i} className="bg-gray-50 p-2 rounded">
-                        <p className="text-xs text-gray-500">{spec.label}</p>
-                        <p className="font-medium">{spec.value}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="mb-6">
-                  <h4 className="font-semibold text-gray-700 mb-2">Équipements :</h4>
-                  <ul className="space-y-2">
-                    {vehicle.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center space-x-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                        <span className="text-gray-600">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <motion.button 
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Réserver ce véhicule
-                </motion.button>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
 
 // Composant Témoignages amélioré
 const TestimonialsSection = () => {

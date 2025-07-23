@@ -263,12 +263,19 @@ export const signout = async (req, res, next) => {
     }
   }
 
-// 22 Fonction pour mettre à jour les informations d'un utilisateur
+//Fonction pour mettre à jour les informations d'un utilisateur
 export const updateUser = async (req, res) => {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const { email, username, currentPassword, newPassword } = req.body;
 
     try {
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Utilisateur non authentifié.",
+            })
+        }
+
         // Vérifier si l'utilisateur existe
         const [users] = await connectionDB.query(
             'SELECT * FROM users WHERE id = ?',

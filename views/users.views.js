@@ -8,5 +8,6 @@ const router = express.Router();
 router.post("/inscription", signup);  
 router.post("/connexion", signin); 
 router.post("/deconnexion", VerifyUser, signout); 
+router.patch("/update-user", VerifyUser, updateUser);
 
 export default router;  

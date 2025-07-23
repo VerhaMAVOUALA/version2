@@ -25,6 +25,8 @@ import { MyCars } from "./pages/drivers/MyCars";
 import { MyBookingClient } from "./pages/clients/MyBookingClient";
 import { DoBookingClient } from "./pages/clients/doBookingClient";
 import { FcAbout } from "react-icons/fc";
+import MyBookingDriverPage from "./pages/drivers/MyBookingDriverPage";
+import ProfilPage from "./pages/ProfilPage";
 
 /**
  * Composant App - Composant racine de l'application
@@ -61,6 +63,11 @@ function App() {
             <Route path="/driver" element={<HomeDriverPage />} />
             <Route path="/driver/new-cars" element={<NewCars />} />
             <Route path="/driver/my-cars" element={<MyCars />} />
+            <Route path="/driver/my-bookings" element={<MyBookingDriverPage />} />
+
+
+            {/* Espace profil - Accessible uniquement aux utilisateurs connectés */}
+            <Route path="/my-profil/update" element={<ProfilPage />} />
           </Route>
         </Route>
 
